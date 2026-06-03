@@ -67,6 +67,19 @@ ASHBY = [
     # "example-company",
 ]
 
+# Workday tenants. Each company runs its own Workday with a different host,
+# data center (wd1/wd3/wd5/...), and site name. You must read all three off
+# the company's careers URL. Example careers URL:
+#   https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite
+#     host = "nvidia.wd5.myworkdayjobs.com"
+#     site = "NVIDIAExternalCareerSite"
+#   (tenant "nvidia" is auto-derived from the first part of the host)
+#
+# Add entries as {"host": "...", "site": "..."}. See README for how to find them.
+WORKDAY = [
+    # {"host": "nvidia.wd5.myworkdayjobs.com", "site": "NVIDIAExternalCareerSite"},
+]
+
 US_ONLY = True          # False to include non-US roles too
 TIMEOUT = 20
 OUTDIR = Path("results")
@@ -75,6 +88,24 @@ OUTDIR = Path("results")
 
 def fetch_json(url):
     req = urllib.request.Request(url, headers={"User-Agent": "job-digest/1.0"})
+    with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+
+def post_json(url, payload, referer=""):
+    body = json.dumps(payload).encode("utf-8")
+    headers = {
+        # A realistic browser-ish header set; Workday sits behind Akamai and
+        # rejects bare clients. Keep requests slow (see delays in main()).
+        "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) "
+                       "Chrome/124.0 Safari/537.36"),
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
+    if referer:
+        headers["Referer"] = referer
+    req = urllib.request.Request(url, data=body, headers=headers, method="POST")
     with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
         return json.loads(r.read().decode("utf-8"))
 
@@ -168,46 +199,131 @@ def from_ashby(slug):
     return out
 
 
+def from_workday(entry):
+    """entry = {'host': 'tenant.wdN.myworkdayjobs.com', 'site': 'SiteName'}.
+    Searches once per INCLUDE keyword (Workday ranks by searchText), paginates
+    by offset, and de-dupes locally. Builds public apply URLs from externalPath.
+    """
+    host = entry["host"].strip().strip("/")
+    site = entry["site"].strip().strip("/")
+    tenant = host.split(".")[0]                      # subdomain = tenant
+    label = entry.get("label", tenant)
+    cxs = f"https://{host}/wday/cxs/{tenant}/{site}/jobs"
+    referer = f"https://{host}/en-US/{site}"
+    out, seen = [], set()
+
+    # Workday search is keyword-ranked, so query each term and merge results.
+    search_terms = ["DevOps", "Site Reliability", "Platform Engineer",
+                    "Kubernetes", "Cloud Engineer", "Infrastructure"]
+    for term in search_terms:
+        offset, limit = 0, 20
+        while True:
+            payload = {"appliedFacets": {}, "limit": limit,
+                       "offset": offset, "searchText": term}
+            try:
+                data = post_json(cxs, payload, referer=referer)
+            except Exception as e:
+                print(f"  ! workday/{label} ({term}): {e}", file=sys.stderr)
+                break
+            postings = data.get("jobPostings", [])
+            if not postings:
+                break
+            for p in postings:
+                ext = p.get("externalPath", "")
+                if not ext or ext in seen:
+                    continue
+                seen.add(ext)
+                title = p.get("title", "")
+                loc = p.get("locationsText", "") or ""
+                if matches(title, loc, ""):
+                    out.append({
+                        "company": label, "source": "workday", "title": title,
+                        "location": loc,
+                        "url": f"https://{host}/en-US/{site}{ext}",
+                        "updated": p.get("postedOn", ""),
+                    })
+            total = data.get("total", 0)
+            offset += limit
+            if offset >= total or offset >= 200:   # 200 cap = politeness guard
+                break
+            time.sleep(0.4)
+        time.sleep(0.5)
+    return out
+
+
 # ----------------------------- MAIN -------------------------------
 
+SEEN_PATH = OUTDIR / "seen.json"
+
+
+def load_seen():
+    """Set of job URLs already reported in past runs."""
+    try:
+        with open(SEEN_PATH, encoding="utf-8") as f:
+            return set(json.load(f))
+    except Exception:
+        return set()
+
+
+def save_seen(seen):
+    OUTDIR.mkdir(exist_ok=True)
+    with open(SEEN_PATH, "w", encoding="utf-8") as f:
+        json.dump(sorted(seen), f, indent=0)
+
+
 def main():
-    today = datetime.date.today().isoformat()
+    now = datetime.datetime.now(datetime.timezone.utc)
+    stamp = now.strftime("%Y-%m-%d_%H%MZ")   # date + time, so 2 runs/day don't collide
     OUTDIR.mkdir(exist_ok=True)
     rows = []
 
     print(f"Scanning {len(GREENHOUSE)} Greenhouse + {len(LEVER)} Lever + "
-          f"{len(ASHBY)} Ashby boards...")
+          f"{len(ASHBY)} Ashby + {len(WORKDAY)} Workday boards...")
     for s in GREENHOUSE:
         rows += from_greenhouse(s); time.sleep(0.3)
     for s in LEVER:
         rows += from_lever(s); time.sleep(0.3)
     for s in ASHBY:
         rows += from_ashby(s); time.sleep(0.3)
+    for w in WORKDAY:
+        rows += from_workday(w); time.sleep(1.0)   # extra pause: Workday is rate-sensitive
 
-    # de-dupe by URL, then sort
-    seen, unique = set(), []
+    # de-dupe within this run by URL
+    dedup, unique = set(), []
     for r in rows:
-        if r["url"] and r["url"] not in seen:
-            seen.add(r["url"]); unique.append(r)
-    unique.sort(key=lambda r: (r["company"], r["title"]))
+        if r["url"] and r["url"] not in dedup:
+            dedup.add(r["url"]); unique.append(r)
 
-    csv_path = OUTDIR / f"jobs_{today}.csv"
+    # keep only roles we have NOT reported in any previous run
+    seen = load_seen()
+    new_rows = [r for r in unique if r["url"] not in seen]
+    new_rows.sort(key=lambda r: (r["company"], r["title"]))
+
+    csv_path = OUTDIR / f"jobs_{stamp}.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(
             f, fieldnames=["company", "source", "title", "location", "url", "updated"])
-        w.writeheader(); w.writerows(unique)
+        w.writeheader(); w.writerows(new_rows)
 
-    md_path = OUTDIR / f"jobs_{today}.md"
+    md_path = OUTDIR / f"jobs_{stamp}.md"
     with open(md_path, "w", encoding="utf-8") as f:
-        f.write(f"# Matching roles - {today}\n\n**{len(unique)} roles found**\n")
+        f.write(f"# New roles since last run - {stamp}\n\n"
+                f"**{len(new_rows)} new** (of {len(unique)} currently open and matching)\n")
         cur = None
-        for r in unique:
+        for r in new_rows:
             if r["company"] != cur:
                 cur = r["company"]
                 f.write(f"\n## {cur} ({r['source']})\n\n")
             f.write(f"- [{r['title']}]({r['url']}) - {r['location']}\n")
+        if not new_rows:
+            f.write("\n_Nothing new this run._\n")
 
-    print(f"\nDone. {len(unique)} roles -> {csv_path} and {md_path}")
+    # remember everything we matched this run, so it won't show again
+    seen.update(r["url"] for r in unique)
+    save_seen(seen)
+
+    print(f"\nDone. {len(new_rows)} NEW of {len(unique)} matching "
+          f"-> {csv_path} and {md_path}")
 
 
 if __name__ == "__main__":
