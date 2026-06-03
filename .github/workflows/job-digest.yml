@@ -1,0 +1,43 @@
+name: daily-job-digest
+
+# Runs automatically on a schedule, and lets you trigger it by hand too.
+on:
+  schedule:
+    # 13:00 UTC = ~8am US Eastern, weekdays only.
+    # Adjust the cron if you want a different time/days.
+    - cron: "0 13 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write   # needed so the job can commit results back to the repo
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the scanner
+        run: python daily_devops_jobs.py
+
+      # Option 1: keep each day's results as a downloadable artifact
+      - name: Upload results artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: job-digest-${{ github.run_id }}
+          path: results/
+
+      # Option 2: commit results into the repo so you build a daily history
+      - name: Commit results
+        run: |
+          git config user.name "job-bot"
+          git config user.email "job-bot@users.noreply.github.com"
+          git add results/
+          git commit -m "Job digest $(date +%F)" || echo "no changes to commit"
+          git push || echo "nothing to push"
