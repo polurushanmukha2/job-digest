@@ -1,13 +1,9 @@
 company,source,title,location,url,updated
-amwell,greenhouse,Mid Senior DevOps Engineer,Colombia,https://job-boards.greenhouse.io/amwell/jobs/4247439009,2026-05-19T09:57:02-04:00
-amwell,greenhouse,Staff DevOps Engineer,Colombia,https://job-boards.greenhouse.io/amwell/jobs/4219249009,2026-05-01T15:35:36-04:00
-amwell,greenhouse,Staff Site Reliability Engineer,Colombia,https://job-boards.greenhouse.io/amwell/jobs/4237309009,2026-05-07T10:48:27-04:00
 apptronik,greenhouse,Data Platform Engineer,"Onsite - Austin, TX",https://boards.greenhouse.io/apptronik/jobs/5978948004?gh_jid=5978948004,2026-05-08T13:26:15-04:00
 apptronik,greenhouse,DevOps Engineer,"Onsite - Austin, TX",https://boards.greenhouse.io/apptronik/jobs/5997000004?gh_jid=5997000004,2026-05-15T11:58:17-04:00
 apptronik,greenhouse,Senior Site Reliability Engineer,"Onsite - Austin, TX",https://boards.greenhouse.io/apptronik/jobs/5679429004?gh_jid=5679429004,2026-05-14T11:18:07-04:00
 armada,greenhouse,Senior Platform/DevOps Engineer (Kubernetes-Linux) ,"Bellevue Office, Sunset Corporate Campus",https://job-boards.greenhouse.io/armada/jobs/5149774008,2026-06-03T12:14:37-04:00
 armada,greenhouse,Senior Software Engineer - AI Infrastructure,"Bellevue Office, Sunset Corporate Campus",https://job-boards.greenhouse.io/armada/jobs/5069401008,2026-06-03T12:14:37-04:00
-armada,greenhouse,Senior Technical Partner Manager ,"Bellevue Office, Sunset Corporate Campus",https://job-boards.greenhouse.io/armada/jobs/5201853008,2026-06-03T12:14:37-04:00
 armada,greenhouse,"Staff Platform Engineer, Kubernetes","Bellevue Office, Sunset Corporate Campus",https://job-boards.greenhouse.io/armada/jobs/5126489008,2026-06-03T12:14:37-04:00
 attentive,greenhouse,"Senior Software Engineer, ML/AI Platform",United States,https://job-boards.greenhouse.io/attentive/jobs/4252255009,2026-05-20T13:24:56-04:00
 attentive,greenhouse,"Software Engineer II, BI Tooling and Platform",United States,https://job-boards.greenhouse.io/attentive/jobs/4224514009,2026-05-07T10:51:58-04:00
@@ -27,23 +23,18 @@ clickhouse,greenhouse,Senior Full Stack Software Engineer - ClickPipes Platform,
 clickhouse,greenhouse,Senior Infrastructure Engineer - Postgres,United States (remote),https://job-boards.greenhouse.io/clickhouse/jobs/5706417004,2026-03-27T09:46:40-04:00
 clickhouse,greenhouse,Senior Site Reliability Engineer- Remote ,United States(remote),https://job-boards.greenhouse.io/clickhouse/jobs/5819754004,2026-03-27T09:46:40-04:00
 clickhouse,greenhouse,Senior Software Engineer - Cloud Infrastructure,United States(Remote),https://job-boards.greenhouse.io/clickhouse/jobs/5819674004,2026-03-27T09:46:40-04:00
-clickhouse,greenhouse,Senior Software Engineer - Cloud Infrastructure,Amsterdam(Remote),https://job-boards.greenhouse.io/clickhouse/jobs/5819678004,2026-03-27T09:46:40-04:00
-clickhouse,greenhouse,Senior Software Engineer - Cloud Infrastructure,London(Remote),https://job-boards.greenhouse.io/clickhouse/jobs/5819677004,2026-03-27T09:46:40-04:00
 crunchyroll,greenhouse,"Senior DevOps Engineer, Core Infrastructure Engineering","San Francisco, CA, United States",https://boards.greenhouse.io/crunchyroll/jobs/7293016?gh_jid=7293016,2026-06-01T12:55:10-04:00
 crunchyroll,greenhouse,Staff DevOps Engineer,"Los Angeles, California, United States",https://boards.greenhouse.io/crunchyroll/jobs/7483996?gh_jid=7483996,2026-06-01T12:55:10-04:00
 crunchyroll,greenhouse,Staff DevOps Engineer,"San Francisco, CA, United States",https://boards.greenhouse.io/crunchyroll/jobs/7462442?gh_jid=7462442,2026-06-01T12:55:10-04:00
 defenseunicorns,greenhouse,Platform Engineer,"Remote, United States",https://job-boards.greenhouse.io/defenseunicorns/jobs/5151114007,2026-06-01T00:50:48-04:00
 defenseunicorns,greenhouse,Platform Engineer,"San Antonio, Texas",https://job-boards.greenhouse.io/defenseunicorns/jobs/4951114007,2026-06-02T12:04:28-04:00
 defenseunicorns,greenhouse,Platform Engineer,"Remote, United States",https://job-boards.greenhouse.io/defenseunicorns/jobs/5127118007,2026-06-01T19:52:13-04:00
-defenseunicorns,greenhouse,Platform Engineer - Secret/Top Secret,"Remote, United States",https://job-boards.greenhouse.io/defenseunicorns/jobs/5140648007,2026-06-02T12:05:33-04:00
 defenseunicorns,greenhouse,Senior Platform Engineer ,"Remote, United States ",https://job-boards.greenhouse.io/defenseunicorns/jobs/5125716007,2026-06-01T19:52:44-04:00
 elliginthealth,greenhouse,DevOps Engineer (Systems Focus),NJ or Remote (within the U.S.),https://job-boards.greenhouse.io/elliginthealth/jobs/8454433002,2026-03-08T20:13:04-04:00
 elliginthealth,greenhouse,DevOps/Site Reliability Engineer (SRE),NJ/ATL or Remote (within the U.S.),https://job-boards.greenhouse.io/elliginthealth/jobs/8297566002,2025-11-18T14:24:31-05:00
 ensono,greenhouse,Senior Observability Engineer,"Irvine, CA",https://ensono.com/company/careers/jobs-board/?gh_jid=4685772005,2026-05-29T16:50:18-04:00
-getbuilt,greenhouse,Cloud Platform Engineer (SRE / DevOps) - Mendoza ,"Mendoza, Argentina",https://job-boards.greenhouse.io/getbuilt/jobs/4698760005,2026-06-02T11:45:43-04:00
 imaginepediatrics,greenhouse,Senior Platform Engineer,"Remote, USA",https://job-boards.greenhouse.io/imaginepediatrics/jobs/4687958005,2026-04-30T16:39:16-04:00
 incode,greenhouse,Senior DevOps Engineer,Remote,https://job-boards.greenhouse.io/incode/jobs/6008887004,2026-06-02T09:01:46-04:00
-incode,greenhouse,Senior DevOps Engineer,Serbia,https://job-boards.greenhouse.io/incode/jobs/5651289004,2026-05-25T18:55:39-04:00
 natera,greenhouse,DevOps Engineer,US Remote,https://job-boards.greenhouse.io/natera/jobs/5990785004,2026-05-20T14:56:37-04:00
 natera,greenhouse,"Manager, Platform Engineering",US Remote,https://job-boards.greenhouse.io/natera/jobs/5993811004,2026-05-11T19:15:44-04:00
 natera,greenhouse,Senior Workday Platform Engineer,US Remote,https://job-boards.greenhouse.io/natera/jobs/5993464004,2026-05-18T16:28:55-04:00
@@ -51,35 +42,19 @@ natera,greenhouse,Staff AI-Native Platform Engineer,US Remote,https://job-boards
 perfectserve,greenhouse,Senior Platform Engineer - US Remote,Remote,https://job-boards.greenhouse.io/perfectserve/jobs/5868778004,2026-04-09T14:05:46-04:00
 rackner,greenhouse,DevSecOps (Kubernetes) SME,Remote (United States),https://job-boards.greenhouse.io/rackner/jobs/4701566005,2026-06-01T15:44:21-04:00
 rackner,greenhouse,Platform Engineer (Cloud-Native AI/ML Systems Integration),"Dayton, OH",https://job-boards.greenhouse.io/rackner/jobs/4676544005,2026-04-13T11:53:48-04:00
-rackner,greenhouse,Senior Technical Account Manager — Kubernetes / DevSecOps (Federal Platform),"Washington, DC",https://job-boards.greenhouse.io/rackner/jobs/4687536005,2026-04-29T20:09:03-04:00
-rackner,greenhouse,Sr. Kubernetes Engineer (Secret Eligible),Remote,https://job-boards.greenhouse.io/rackner/jobs/4701563005,2026-06-01T15:35:39-04:00
 recordedfuture,greenhouse,Platform Engineer (CI/CD & Kubernetes Focus),"Boston, MA",https://job-boards.greenhouse.io/recordedfuture/jobs/8508810002,2026-05-29T15:10:42-04:00
 recordedfuture,greenhouse,Platform Engineer (CI/CD & Kubernetes Focus),"Washington, DC",https://job-boards.greenhouse.io/recordedfuture/jobs/8548078002,2026-05-29T15:10:42-04:00
-recordedfuture,greenhouse,Platform Engineer (Encryption & Data Security),"Gothenburg, Sweden",https://job-boards.greenhouse.io/recordedfuture/jobs/8508971002,2026-05-29T15:10:42-04:00
-recordedfuture,greenhouse,Platform Engineer (Encryption & Data Security),"Gothenburg, Sweden",https://job-boards.greenhouse.io/recordedfuture/jobs/8504902002,2026-05-29T15:10:42-04:00
-recordedfuture,greenhouse,Platform Engineer (Encryption & Data Security),"Gothenburg, Sweden",https://job-boards.greenhouse.io/recordedfuture/jobs/8508973002,2026-05-29T15:10:42-04:00
-recordedfuture,greenhouse,Site Reliability Engineer,"Gothenburg, Sweden",https://job-boards.greenhouse.io/recordedfuture/jobs/8504900002,2026-05-29T15:10:42-04:00
 relativity,greenhouse,"Manager, Infrastructure Engineering","Cape Canaveral, Florida",https://boards.greenhouse.io/relativity/jobs/8391594002?gh_jid=8391594002,2026-04-30T15:20:45-04:00
 relativity,greenhouse,"Manager, Launch Design and Build Engineering","Cape Canaveral, Florida",https://boards.greenhouse.io/relativity/jobs/8495515002?gh_jid=8495515002,2026-04-30T15:20:45-04:00
 relativity,greenhouse,Senior DevOps Engineer,"Long Beach, California",https://boards.greenhouse.io/relativity/jobs/8422715002?gh_jid=8422715002,2026-05-19T16:26:09-04:00
 relativity,greenhouse,Senior Infrastructure Engineer,"Cape Canaveral, Florida",https://boards.greenhouse.io/relativity/jobs/8487244002?gh_jid=8487244002,2026-04-30T15:20:45-04:00
-rise8,greenhouse,CI/CD Engineer III (Cleared),Remote,https://job-boards.greenhouse.io/rise8/jobs/4603320007,2026-05-20T13:18:30-04:00
 rise8,greenhouse,Platform Engineer III,Remote,https://job-boards.greenhouse.io/rise8/jobs/4527025007,2026-05-20T13:18:30-04:00
-rise8,greenhouse,Senior CI/CD Engineer (Cleared),Remote,https://job-boards.greenhouse.io/rise8/jobs/4664171007,2026-05-20T13:18:30-04:00
-rise8,greenhouse,Senior CI/CD Engineer (Cleared) ,"Tampa, Florida",https://job-boards.greenhouse.io/rise8/jobs/5143027007,2026-05-20T13:45:41-04:00
 rise8,greenhouse,Senior Platform Engineer,Remote,https://job-boards.greenhouse.io/rise8/jobs/4474613007,2026-05-20T13:18:30-04:00
-rise8,greenhouse,Senior Platform Engineer (Cleared) ,"Tampa, Florida",https://job-boards.greenhouse.io/rise8/jobs/5143187007,2026-05-20T14:05:29-04:00
-torq,greenhouse,DevOps Engineer,Tel Aviv ,https://job-boards.greenhouse.io/torq/jobs/5810373004,2026-02-23T11:03:43-05:00
 torq,greenhouse,DevOps Engineer (Remote),"Austin, Texas",https://job-boards.greenhouse.io/torq/jobs/5710946004,2026-06-02T05:09:44-04:00
 torq,greenhouse,DevOps Engineer (Remote),"Providence, Rhode Island, United States",https://job-boards.greenhouse.io/torq/jobs/6010965004,2026-06-02T05:47:35-04:00
 torq,greenhouse,DevOps Engineer (Remote),"New York, United States",https://job-boards.greenhouse.io/torq/jobs/6010964004,2026-06-02T05:38:46-04:00
 torq,greenhouse,DevOps Engineer (Remote),"Boston, Massachusetts, United States",https://job-boards.greenhouse.io/torq/jobs/6010968004,2026-06-02T05:51:20-04:00
 torq,greenhouse,DevOps Engineer (Remote),"Washington, United States",https://job-boards.greenhouse.io/torq/jobs/6010969004,2026-06-02T05:55:35-04:00
 webflow,greenhouse,"Engineering Manager, Developer Productivity",CA Remote (BC & ON only); U.S. Remote,https://job-boards.greenhouse.io/webflow/jobs/7832069,2026-04-22T13:44:35-04:00
-webflow,greenhouse,"Senior DevOps Engineer, Delivery Loop",Argentina Remote,https://job-boards.greenhouse.io/webflow/jobs/7866296,2026-05-29T17:12:00-04:00
-webflow,greenhouse,"Senior Infrastructure Engineer, Cloud",Argentina Remote,https://job-boards.greenhouse.io/webflow/jobs/7904982,2026-05-08T13:48:32-04:00
-webflow,greenhouse,"Senior Product Manager, Developer Productivity",CA Remote (BC & ON only); U.S. Remote,https://job-boards.greenhouse.io/webflow/jobs/7815489,2026-05-27T09:15:30-04:00
-webflow,greenhouse,"Senior Site Reliability Engineer, Observability",Argentina Remote,https://job-boards.greenhouse.io/webflow/jobs/7909588,2026-05-19T14:52:15-04:00
-webflow,greenhouse,"Staff DevOps Engineer, Delivery Loop",Argentina Remote,https://job-boards.greenhouse.io/webflow/jobs/7942745,2026-05-29T17:11:43-04:00
 wurljobs,greenhouse,"Senior Software Engineer, Ad Platform",Remote - United States,https://job-boards.greenhouse.io/wurljobs/jobs/4646752006,2026-06-02T12:00:29-04:00
 wurljobs,greenhouse,Staff Platform Engineer,Remote - United States,https://job-boards.greenhouse.io/wurljobs/jobs/4664949006,2026-06-02T12:00:29-04:00
