@@ -36,9 +36,11 @@ INCLUDE = [
 EXCLUDE = [
     "no sponsorship", "unable to sponsor", "must not require sponsorship",
     "us citizen", "u.s. citizen", "security clearance", "clearance required",
-    "ts/sci", "secret clearance",
+    "ts/sci", "secret clearance", "(cleared)", "secret eligible",
+    "secret/top secret", "top secret", "must be a us", "must be us",
     "account executive", "sales", "recruiter", "marketing", "counsel",
     "business development", "customer success",
+    "partner manager", "account manager", "product manager",
     "intern",   # remove this line if you DO want internships
 ]
 
@@ -93,6 +95,8 @@ def matches(title, location, dept=""):
             "india", "canada", "uk", "united kingdom", "germany", "ireland",
             "france", "australia", "singapore", "poland", "romania", "brazil",
             "mexico", "japan", "netherlands", "spain", "israel", "portugal",
+            "colombia", "argentina", "sweden", "serbia", "tel aviv",
+            "gothenburg", "amsterdam", "london", "mendoza", "bogota",
             "remote - emea", "remote - apac", "remote-emea", "remote-apac",
         ]
         if any(n in loc for n in non_us):
