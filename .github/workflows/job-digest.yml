@@ -1,16 +1,16 @@
 name: daily-job-digest
 
-# Runs automatically on a schedule, and lets you trigger it by hand too.
 on:
   schedule:
-    # Two runs per weekday (UTC). 13:00 UTC ~ 8am ET, 21:00 UTC ~ 4pm ET.
-    # Each run only reports roles not seen in any previous run.
-    - cron: "0 13 * * 1-5"
-    - cron: "0 21 * * 1-5"
+    # Avoid :00 because GitHub scheduled workflows can be delayed or dropped at top-of-hour load.
+    # During EDT: 12:17 UTC = 8:17 AM ET, 16:43 UTC = 12:43 PM ET, 20:43 UTC = 4:43 PM ET
+    - cron: "17 12 * * 1-5"
+    - cron: "43 16 * * 1-5"
+    - cron: "43 20 * * 1-5"
   workflow_dispatch: {}
 
 permissions:
-  contents: write   # needed so the job can commit results back to the repo
+  contents: write
 
 jobs:
   scan:
@@ -27,21 +27,17 @@ jobs:
       - name: Run the scanner
         run: python daily_devops_jobs.py
 
-      # Option 1: keep each day's results as a downloadable artifact
       - name: Upload results artifact
         uses: actions/upload-artifact@v4
         with:
           name: job-digest-${{ github.run_id }}
           path: results/
 
-      # Commit results + the seen.json memory back into the repo so the next
-      # run knows what was already reported. Pull-rebase first in case the two
-      # daily runs overlap.
       - name: Commit results
         run: |
           git config user.name "job-bot"
           git config user.email "job-bot@users.noreply.github.com"
+          git pull --rebase origin ${{ github.ref_name }} || true
           git add results/
           git commit -m "Job digest $(date -u +%FT%RZ)" || { echo "nothing to commit"; exit 0; }
-          git pull --rebase origin ${{ github.ref_name }} || true
           git push || echo "nothing to push"
