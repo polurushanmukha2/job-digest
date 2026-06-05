@@ -1,81 +1,96 @@
-# job-digest
-Daily scanner for DevOps/SRE roles at H-1B-friendly companies
+# DevOps Job Digest
 
-# Daily DevOps Job Digest
+A lightweight automation project that scans public job-board APIs and creates a daily digest of DevOps, SRE, Platform, Cloud, Kubernetes, and Terraform roles.
 
-Scans H-1B-friendly companies' public job boards every morning and writes a
-filtered list of DevOps / SRE / Platform / Cloud roles. Built from the company
-target list.
+I built this because job searching can get repetitive very quickly. Instead of manually checking the same company career pages every day, this script pulls matching roles into a clean CSV and Markdown digest so I can review relevant openings faster and apply more intentionally.
+
+The project is intentionally simple: no API keys, no paid services, and no auto-apply behavior.
 
 ## What it does
 
-1. Hits the **public** job-board APIs for Greenhouse, Lever, and Ashby boards.
-2. Keeps only roles whose title/department match your keywords
-   (DevOps, SRE, Platform, Kubernetes, Terraform, etc.).
-3. Drops roles that say "no sponsorship", "US citizen", "clearance required", etc.
-4. Optionally drops non-US roles.
-5. Writes `results/jobs_YYYY-MM-DD.csv` and a readable `.md` digest.
+* Scans public job-board APIs for Greenhouse, Lever, Ashby, and configurable Workday boards
+* Filters roles by DevOps, SRE, Platform, Cloud, Kubernetes, Terraform, observability, and release engineering keywords
+* Removes roles that clearly mention no sponsorship, citizenship-only, clearance-only, or non-engineering functions
+* Optionally filters for US-based roles
+* Writes timestamped CSV and Markdown output under `results/`
+* Maintains a `seen.json` file so the same job is not reported repeatedly
+* Runs locally or automatically through GitHub Actions
 
-No API keys required.
+## Why I built it
 
-## Run it locally
+When applying for DevOps and Platform Engineering roles, I noticed that many good roles disappear quickly. I wanted a simple way to check target companies consistently without spending the first hour of every day opening the same career pages manually.
+
+This project helps separate job discovery from job application. The script finds relevant openings, but I still review each role manually before applying and tailoring my resume.
+
+## Tech stack
+
+* Python 3.9+
+* GitHub Actions
+* Public Greenhouse, Lever, Ashby, and Workday-style APIs
+* CSV and Markdown output
+* Standard library only
+
+## Run locally
 
 ```bash
 python daily_devops_jobs.py
-# -> results/jobs_2026-06-03.csv  and  results/jobs_2026-06-03.md
 ```
 
-Needs Python 3.9+ (standard library only, nothing to pip install).
+Example output:
 
-## Run it automatically every day (recommended: GitHub Actions)
+```text
+results/jobs_2026-06-03_1300Z.csv
+results/jobs_2026-06-03_1300Z.md
+```
 
-1. Create a new GitHub repo, e.g. `job-digest`.
-2. Put `daily_devops_jobs.py` in the root.
-3. Put `job-digest.yml` in `.github/workflows/`.
-4. Push. The workflow runs weekday mornings (13:00 UTC) and on manual trigger.
-   Each run uploads the results as an artifact and commits them into the repo.
+## Run with GitHub Actions
 
-Other schedulers:
-- **macOS/Linux:** `crontab -e` then `0 8 * * 1-5 cd /path && python3 daily_devops_jobs.py`
-- **Windows:** Task Scheduler -> daily trigger -> action `python C:\path\daily_devops_jobs.py`
+The workflow runs on weekdays and can also be triggered manually.
 
-## ATS coverage (important)
+```yaml
+on:
+  schedule:
+    - cron: "17 12 * * 1-5"
+    - cron: "43 16 * * 1-5"
+    - cron: "43 20 * * 1-5"
+  workflow_dispatch: {}
+```
 
-| ATS         | Status        | Endpoint used                                              |
-|-------------|---------------|------------------------------------------------------------|
-| Greenhouse  | Working (v1)  | `boards-api.greenhouse.io/v1/boards/{slug}/jobs`           |
-| Lever       | Working (v1)  | `api.lever.co/v0/postings/{slug}?mode=json`                |
-| Ashby       | Working (v1)  | `api.ashbyhq.com/posting-api/job-board/{slug}`             |
-| Workday     | Not yet       | Each tenant has its own host + POST-based API (per-company)|
-| Custom/FAANG| Not yet       | Amazon/Google/Apple/Microsoft pages need bespoke handling  |
+I avoid scheduling exactly at the top of the hour because scheduled GitHub Actions can be delayed during high-load periods.
 
-Most big enterprises (Microsoft, Salesforce, many banks/healthcare) run
-**Workday**, and FAANG run custom portals. Those need a separate, heavier flow
-(often a headless browser). v1 deliberately covers the boards with clean,
-free JSON APIs first.
+## ATS coverage
+
+| ATS            | Status           | Notes                                            |
+| -------------- | ---------------- | ------------------------------------------------ |
+| Greenhouse     | Supported        | Uses the public boards API                       |
+| Lever          | Supported        | Uses the public postings API                     |
+| Ashby          | Supported        | Uses the public job-board API                    |
+| Workday        | Partial          | Requires per-company host and site configuration |
+| Custom portals | Not included yet | Larger companies often need custom handling      |
 
 ## How to add a company
 
-You need the company's ATS **slug**, not its branded careers URL.
+You need the company’s ATS slug, not just the branded careers URL.
 
-- **Greenhouse:** open the careers page, find the board URL like
-  `job-boards.greenhouse.io/COMPANYSLUG` -> add `COMPANYSLUG` to the
-  `GREENHOUSE` list.
-- **Lever:** board looks like `jobs.lever.co/COMPANYSLUG` -> add to `LEVER`.
-- **Ashby:** board looks like `jobs.ashbyhq.com/COMPANYSLUG` -> add to `ASHBY`.
+For example:
 
-Tip: view-source or check the network tab on a company's careers page to see
-which ATS it uses and what the slug is.
+* Greenhouse: `job-boards.greenhouse.io/companyslug`
+* Lever: `jobs.lever.co/companyslug`
+* Ashby: `jobs.ashbyhq.com/companyslug`
 
-## Tune the filters
+Add the slug to the matching list in `daily_devops_jobs.py`.
 
-Edit the lists at the top of `daily_devops_jobs.py`:
-- `INCLUDE` - titles you want
-- `EXCLUDE` - kill-words (sponsorship/clearance/non-eng roles)
-- `US_ONLY` - set `False` to include international roles
+## What this project does not do
 
-## What this does NOT do (on purpose)
+This project does not auto-apply to jobs.
 
-- It does not tailor your resume per role - do that thoughtfully per application.
-- It does not auto-apply - most sites reject bot applications, and targeted
-  applications win, especially for sponsorship roles.
+That is intentional. For DevOps and sponsorship-focused roles, targeted applications usually work better than mass automation. This tool helps with discovery, but resume tailoring, outreach, and application quality still matter.
+
+## Future improvements
+
+* Add more company board slugs
+* Improve Workday support
+* Add email or Slack digest delivery
+* Add a small dashboard for reviewing roles
+* Add tags for company type, remote status, and sponsorship friendliness
+* Improve duplicate detection across similar postings
