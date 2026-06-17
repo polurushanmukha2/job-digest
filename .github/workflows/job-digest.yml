@@ -25,6 +25,8 @@ jobs:
           python-version: "3.12"
 
       - name: Run the scanner
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
         run: python daily_devops_jobs.py
 
       - name: Upload results artifact
