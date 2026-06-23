@@ -66,6 +66,7 @@ WORKDAY_DIRECT = [
 ]
 
 # Add blocked Workday career-board URLs here after testing them.
+# Apify will not run unless this list has companies.
 WORKDAY_APIFY = [
     # {"name": "Example", "url": "https://example.wd5.myworkdayjobs.com/External/jobs"},
 ]
@@ -125,6 +126,47 @@ NON_US = [
     "australia", "sydney", "singapore", "japan", "tokyo",
     "netherlands", "amsterdam", "poland", "romania", "brazil",
     "mexico", "israel", "tel aviv", "spain", "portugal",
+    "switzerland", "zurich", "sweden", "stockholm", "denmark",
+    "copenhagen", "finland", "helsinki", "norway", "oslo",
+    "czech", "prague", "hungary", "budapest", "new zealand",
+    "auckland", "south africa", "johannesburg", "argentina",
+    "buenos aires", "colombia", "bogota", "chile", "santiago",
+    "peru", "lima", "uae", "dubai", "saudi arabia", "riyadh",
+    "pakistan", "bangladesh", "philippines", "manila", "vietnam",
+    "hanoi", "indonesia", "jakarta", "malaysia", "kuala lumpur",
+    "thailand", "bangkok", "taiwan", "taipei", "south korea",
+    "seoul", "hong kong",
+]
+
+US_LOCATION_KEYWORDS = [
+    "united states", "usa", "u.s.", "us remote", "remote us", "remote - us",
+    "remote - united states", "remote, united states", "remote within the us",
+    "remote within the united states", "united states remote",
+    "new york", "ny", "new jersey", "nj", "california", "ca", "washington", "wa",
+    "texas", "tx", "florida", "fl", "georgia", "ga", "illinois", "il",
+    "massachusetts", "ma", "virginia", "va", "north carolina", "nc",
+    "colorado", "co", "arizona", "az", "oregon", "or", "pennsylvania", "pa",
+    "connecticut", "ct", "maryland", "md", "ohio", "oh", "michigan", "mi",
+    "minnesota", "mn", "tennessee", "tn", "utah", "ut", "nevada", "nv",
+    "wisconsin", "wi", "south carolina", "sc", "alabama", "al", "alaska", "ak",
+    "arkansas", "ar", "delaware", "de", "hawaii", "hi", "idaho", "id",
+    "indiana", "in", "iowa", "ia", "kansas", "ks", "kentucky", "ky",
+    "louisiana", "la", "maine", "me", "mississippi", "ms", "missouri", "mo",
+    "montana", "mt", "nebraska", "ne", "new hampshire", "nh", "new mexico", "nm",
+    "north dakota", "nd", "oklahoma", "ok", "rhode island", "ri",
+    "south dakota", "sd", "vermont", "vt", "west virginia", "wv", "wyoming", "wy",
+    "seattle", "bellevue", "san francisco", "sunnyvale", "san jose",
+    "los angeles", "long beach", "irvine", "san diego", "newark", "jersey city",
+    "edison", "boston", "atlanta", "austin", "dallas", "houston", "chicago",
+    "charlotte", "raleigh", "denver", "phoenix", "portland", "philadelphia",
+    "stamford", "washington dc", "reston", "herndon", "mclean", "livingston",
+]
+
+GLOBAL_REMOTE_BLOCKERS = [
+    "worldwide", "global", "anywhere", "anywhere in the world", "emea", "apac",
+    "europe", "latin america", "latam", "remote - europe", "remote europe",
+    "remote - canada", "remote canada", "remote - india", "remote india",
+    "remote - apac", "remote apac", "remote - emea", "remote emea",
 ]
 
 HEADERS = {
@@ -207,15 +249,27 @@ def title_matches(title, department="", description=""):
 
 def location_status(location, description=""):
     text = f"{location} {description}".lower()
+    location_text = (location or "").strip()
+
+    if any(blocker in text for blocker in GLOBAL_REMOTE_BLOCKERS):
+        return "non_us"
 
     if any(place in text for place in NON_US):
-        if not any(us in text for us in ["united states", "usa", "u.s."]):
+        if not any(us in text for us in ["united states", "usa", "u.s.", " us "]):
             return "non_us"
 
-    if "remote" in text:
-        return "us_remote"
+    if any(us_location in text for us_location in US_LOCATION_KEYWORDS):
+        if "remote" in text:
+            return "us_remote"
+        return "us"
 
-    return "us_or_unknown"
+    if re.search(
+        r"\b(AL|AK|AZ|AR|CA|CO|CT|DE|FL|GA|HI|IA|ID|IL|IN|KS|KY|LA|MA|MD|ME|MI|MN|MO|MS|MT|NC|ND|NE|NH|NJ|NM|NV|NY|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VA|VT|WA|WI|WV|WY)\b",
+        location_text,
+    ):
+        return "us"
+
+    return "non_us"
 
 
 def sponsorship_status(description):
@@ -261,12 +315,16 @@ def build_job(ats, company, native_id, title, location, department, url,
 def route(job):
     if not title_matches(job["title"], job["department"], job["description"]):
         return "skipped", "Title/technology mismatch"
+
     if job["location_status"] == "non_us":
         return "skipped", "Non-US location"
+
     if job["sponsorship_status"] == "blocked":
         return "blocked", f"Sponsorship restriction: {job['sponsorship_reason']}"
+
     if job["sponsorship_status"] == "review_required":
         return "review", f"Manual review: {job['sponsorship_reason']}"
+
     return "matched", ""
 
 
